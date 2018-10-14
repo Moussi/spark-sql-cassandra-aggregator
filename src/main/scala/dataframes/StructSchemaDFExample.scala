@@ -17,9 +17,15 @@ object StructSchemaDFExample extends App {
   val italianPosts = ss.sparkContext.textFile("src/main/resources/italianPosts.csv").map(post => stringToRow(post))
   val italianPostsDF = ss.createDataFrame(italianPosts, postSchema)
 
+  println("*************** DF schema ****************")
   italianPostsDF.printSchema()
+  println("************** DF columns *********************")
+  italianPostsDF.columns.foreach(println)
 
-  italianPostsDF.take(2).foreach(s => println(s.fieldIndex("title")))
+  println("************** DF types **************")
+  italianPostsDF.dtypes.foreach(println)
+  println("************** Title index **************")
+  italianPostsDF.take(1).foreach(s => println(s.fieldIndex("title")))
 
 
   def stringToRow(row: String): Row = {
