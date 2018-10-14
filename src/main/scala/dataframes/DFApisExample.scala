@@ -7,6 +7,7 @@ object DFApisExample extends App {
 
   val ss = SparkSession.builder().master("local[*]").getOrCreate()
   import ss.implicits._
+  import org.apache.spark.sql.functions._
 
   import utils.StringUtils._
 
@@ -46,9 +47,29 @@ object DFApisExample extends App {
   val droppedColumnsDF = italianPostsDF.drop("body", "title")
   droppedColumnsDF.printSchema()
   println("**************** Filtering ********************")
+  /**
+    * Full filtering operators
+    * http://spark.apache.org/docs/2.0.0/api/scala/index.html#org.apache.spark.sql.Column
+    */
 
   val filteredDF = italianPostsDF.filter('body contains "Italiano").toDF
   filteredDF.show(2)
   println("Count = "+filteredDF.count)
+
+  val noAnswerDF = italianPostsDF.filter(('postTypeId === 1) and ('acceptedAnswerId isNull))
+  noAnswerDF.show(2)
+  println("Count = "+noAnswerDF.count)
+  val noAnswerLimitDF = italianPostsDF.filter('postTypeId === 1).limit(10)
+  println("Count noAnswerLimitDF = "+noAnswerLimitDF.count)
+
+  val renamedColumnDF = noAnswerLimitDF.withColumnRenamed("body", "content")
+  renamedColumnDF.printSchema()
+
+  println("****************** Adding Column DF")
+  val addColumnDF = noAnswerLimitDF.withColumn("ratio", 'viewCount / 'score).filter('ratio < 36)
+  addColumnDF.show
+  val sortedDF = addColumnDF.sort(desc("ratio"))
+  sortedDF.show
+
 
 }
