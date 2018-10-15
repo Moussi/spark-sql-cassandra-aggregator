@@ -70,5 +70,17 @@ object DFSqlCalculations extends App {
   val sortedDF = addColumnDF.sort(desc("ratio"))
   sortedDF.show
 
+  val htmlBetweenDates = noAnswerDF.filter('postTypeId === 1).
+    withColumn("activePeriod", datediff('lastActivityDate, 'creationDate)).
+    orderBy('activePeriod desc).head.getString(3).
+    replace("&lt;","<").replace("&gt;",">")
 
+  println(htmlBetweenDates)
+
+  /**
+    * the average and maximum score of all questions and the total number of questions.
+    */
+
+  val aggregationDF = italianPostsDF.select(avg('score), count('score), max('score))
+  aggregationDF.show(2)
 }
