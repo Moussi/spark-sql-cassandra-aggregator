@@ -24,7 +24,19 @@ object DFRankingFunctionsManip extends App {
 
   employersDF.select(col("name"), col("dep"), col("salary"), rankColumn.as("rank")).where(
   col("rank").leq(3)).show
+
   val denseRankColumn = dense_rank.over(window)
   employersDF.select(col("name"), col("dep"), col("salary"), denseRankColumn.as("dense_rank")).where(
     col("dense_rank").leq(3)).show
+
+  val rowNumberColumn = row_number().over(window)
+  employersDF.select(col("name"), col("dep"), col("salary"), rowNumberColumn.as("row_number")).show
+
+  val percentRankColumn = percent_rank().over(window)
+  employersDF.select(col("name"), col("dep"), col("salary"), percentRankColumn.as("persent_rank")).show
+
+  val ntileColumn = ntile(2).over(window)
+  employersDF.select(col("name"), col("dep"), col("salary"), ntileColumn.as("ntile_rank")).show
+
+
 }
