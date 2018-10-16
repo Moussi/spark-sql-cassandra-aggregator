@@ -35,8 +35,6 @@ object DFRankingFunctionsManip extends App {
   val percentRankColumn = percent_rank().over(window)
   employersDF.select(col("name"), col("dep"), col("salary"), percentRankColumn.as("persent_rank")).show
 
-  val ntileColumn = ntile(2).over(window)
+  val ntileColumn = ntile(3).over(window)
   employersDF.select(col("name"), col("dep"), col("salary"), ntileColumn.as("ntile_rank")).show
-
-
 }
