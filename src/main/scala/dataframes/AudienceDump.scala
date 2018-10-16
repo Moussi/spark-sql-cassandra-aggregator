@@ -18,11 +18,11 @@ object AudienceDump extends App {
 
 
 
-
+//
 //  var tempertaureByDays = new ListBuffer[TempertaureByDay]()
-//  println("start dumping")
+//  println("start dumping "+new java.util.Date())
 //  val rnd = new scala.util.Random
-//  1 to 100000000 foreach(_ => {
+//  1 to 3000000 foreach(_ => {
 //    tempertaureByDays += TempertaureByDay(UUID.randomUUID().toString, 2 + rnd.nextInt(38),
 //    new java.sql.Timestamp(new java.util.Date().getTime), s"2018-${1+rnd.nextInt(11)}-${1+rnd.nextInt(30)}")
 //  })
@@ -35,17 +35,20 @@ object AudienceDump extends App {
 //    .cassandraFormat("temperature_by_day", "smart_home", CassandraSourceRelation.defaultClusterName, true)
 //    .mode(SaveMode.Append)
 //    .save()
+//
+//  println("end dumping "+new java.util.Date())
 
-  println("end dumping")
 
+  println(new java.util.Date())
   val tempertaureByDayDF = ss
     .read
     .cassandraFormat("temperature_by_day", "smart_home")
-    .options(ReadConf.SplitSizeInMBParam.option(32))
+    .options(ReadConf.SplitSizeInMBParam.option(256))
     .load()
 
 
   tempertaureByDayDF.select(avg('temperature), count('temperature), max('temperature)).show
+  println(new java.util.Date())
 
 
 
