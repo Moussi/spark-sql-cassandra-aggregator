@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.11.12"
 
-val sparkVersion = "2.3.0"
+val sparkVersion = "2.2.1"
 
 
 resolvers ++= Seq(
@@ -18,3 +18,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-hive" % sparkVersion
 )
+
+
+libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "2.0.7"
+
