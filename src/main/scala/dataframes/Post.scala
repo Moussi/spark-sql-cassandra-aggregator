@@ -23,3 +23,4 @@ case class TempertaureByDay(
                            event_time: Timestamp,
                            date: String
                            )
+
