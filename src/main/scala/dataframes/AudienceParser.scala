@@ -1,6 +1,7 @@
 package dataframes
 
 import java.time.LocalDate
+import java.util.UUID
 
 /**
   * Created by amoussi on 17/10/18.
@@ -9,7 +10,8 @@ object AudienceParser {
 
     import utils.StringUtils._
     def parseAudiencePoi(record: Array[String], date: LocalDate, lastoffertypechangeDate: LocalDate) = {
-        AudiencePoi(pyear = date.getYear.toString,
+        AudiencePoi(id = UUID.randomUUID().toString,
+            pyear = date.getYear.toString,
             pmonth = date.getMonthValue.toString,
             pday = date.getDayOfMonth.toString,
             pdate = java.sql.Timestamp.valueOf(date.atStartOfDay()),

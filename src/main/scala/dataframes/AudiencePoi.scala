@@ -1,9 +1,12 @@
 package dataframes
 
+import java.util.UUID
+
 /**
   * Created by amoussi on 17/10/18.
   */
-case class  AudiencePoi(pyear: String,
+case class  AudiencePoi(id: String,
+                        pyear: String,
                         pmonth: String,
                         pday: String,
                         pdate: java.sql.Timestamp,

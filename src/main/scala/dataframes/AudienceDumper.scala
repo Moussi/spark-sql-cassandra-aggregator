@@ -2,15 +2,20 @@ package dataframes
 
 import java.time.LocalDate
 
-import org.apache.spark.sql.cassandra.{CassandraSourceRelation, DataFrameWriterWrapper}
+import com.datastax.spark.connector.rdd.ReadConf
+import org.apache.spark.sql.cassandra._
 import org.apache.spark.sql.{SaveMode, SparkSession}
+import org.slf4j.LoggerFactory
+
 
 object AudienceDumper{
+    val logger = LoggerFactory.getLogger(getClass)
 
     def main(args: Array[String]): Unit = {
 
         val ss = SparkSession.builder().config("spark.cassandra.connection.host", "localhost").master("local[*]").getOrCreate()
         import utils.StringUtils._
+        import org.apache.spark.sql.functions._
 
         val year = args(0)
         val month = args(1)
@@ -20,7 +25,14 @@ object AudienceDumper{
 
         val listOfFiles = filePath.getListOfFiles
 
-        listOfFiles.foreach(file => processAndSaveToCassandra(ss, file.getAbsolutePath))
+        //listOfFiles.foreach(file => processAndSaveToCassandra(ss, file.getAbsolutePath))
+
+        val audienceDF = ss
+            .read
+            .cassandraFormat("bi_poi_audience", "mappy_bi")
+            .options(ReadConf.SplitSizeInMBParam.option(32))
+            .load()
+        audienceDF.select(count("*")).show
     }
 
     def processAndSaveToCassandra(ss: SparkSession, filePath: String) = {
@@ -28,6 +40,7 @@ object AudienceDumper{
           * Create RDD from data.tsv file that we genrated with LogProducer class
           */
 
+        logger.info(s"load data from $filePath")
         import utils.DateUtils._
         import AudienceParser._
         val sourceRDD = ss.sparkContext.textFile(s"file:///$filePath")
@@ -50,6 +63,7 @@ object AudienceDumper{
             .cassandraFormat("bi_poi_audience", "mappy_bi", CassandraSourceRelation.defaultClusterName, true)
             .mode(SaveMode.Append)
             .save()
+        logger.info(s"load success from $filePath")
 
     }
 }
