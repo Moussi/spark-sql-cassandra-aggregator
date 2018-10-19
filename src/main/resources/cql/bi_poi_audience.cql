@@ -1,5 +1,7 @@
+DROP TABLE bi_poi_audience;
 CREATE TABLE bi_poi_audience
 (
+	id text,
 pyear text,
 pmonth text,
 pday text,
@@ -52,4 +54,5 @@ idvariant text,
 indoorview text,
 outdoorview text,
 tabsappid text,
-PRIMARY KEY((pyear, pmonth, pday), pdate, poi_id,terminal, uad_terminal, bot, uad_bot, env, tagid, tagid_groupe, tagid_sous_groupe, offertype));
+PRIMARY KEY((pyear, pmonth, pday), pdate, poi_id,terminal, uad_terminal, bot, uad_bot, env, tagid, tagid_groupe, tagid_sous_groupe, offertype))
+WITH compression = { 'class' : 'LZ4Compressor' };

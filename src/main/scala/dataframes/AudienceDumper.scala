@@ -25,7 +25,7 @@ object AudienceDumper{
 
         val listOfFiles = filePath.getListOfFiles
 
-        //listOfFiles.foreach(file => processAndSaveToCassandra(ss, file.getAbsolutePath))
+//        listOfFiles.foreach(file => processAndSaveToCassandra(ss, file.getAbsolutePath))
 
         val audienceDF = ss
             .read
