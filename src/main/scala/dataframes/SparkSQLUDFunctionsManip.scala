@@ -1,26 +1,39 @@
 package dataframes
 
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.expressions.Window
+import utils.StringUtils._
 
-object DFAggregationFunctionsManip extends App {
+object SparkSQLUDFunctionsManip extends App {
 
 
   val ss = SparkSession.builder().master("local[*]").getOrCreate()
-  import org.apache.spark.sql.functions._
-
+  import ss.implicits._
     /***
     * Ranking Functions
     */
-  val employersDF = ss.read.csv("src/main/resources/windowmanip.csv").toDF("name", "dep", "salary")
+  val italianPosts = ss.sparkContext.textFile("src/main/resources/italianPosts.csv").map(_.split("~"))
+  val italianPostsDF = italianPosts.map(post => Post(post(0).toIntSafe,
+    post(1).toTimestampSafe,
+    post(2).toLongSafe,
+    post(3),
+    post(4).toIntSafe,
+    post(5).toTimestampSafe,
+    post(6).toIntSafe,
+    post(7),
+    post(8),
+    post(9).toIntSafe,
+    post(10).toLongSafe,
+    post(11).toLongSafe,
+    post(12).toLong
+  )).toDF
 
-  //employersDF.show
+  italianPostsDF.createOrReplaceTempView("post")
+  italianPostsDF.printSchema()
 
-  val window = Window.partitionBy("dep").orderBy(asc("salary")).rowsBetween(-1,1)
+  val tagsCountUdf = ss.udf.register("tagsCount", (tags:String) => "&lt;".r.findAllMatchIn(tags).length)
 
-  val sumColumn = sum(col("salary")).over(window)
-  employersDF.select(col("name"), col("dep"), col("salary"), sumColumn.as("sum")).show
-
-
+  ss.sql("""select tags, tagsCount(tags) as counts from post where postTypeId = 1""").show
+  println("************************************")
+  italianPostsDF.filter('postTypeId === 1).select('tags, tagsCountUdf('tags).as("tags count")).show
 
 }
