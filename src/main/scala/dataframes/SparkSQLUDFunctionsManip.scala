@@ -36,4 +36,16 @@ object SparkSQLUDFunctionsManip extends App {
   println("************************************")
   italianPostsDF.filter('postTypeId === 1).select('tags, tagsCountUdf('tags).as("tags count")).show
 
+
+  println(s"posts before removing null and n/a values ${italianPostsDF.count}")
+  println(s"posts after removing null and n/a values ${italianPostsDF.na.drop.count}")
+  println(s"""posts after removing null acceptedAnswerId and n/a values ${italianPostsDF.na.drop(Array("acceptedAnswerId")).count}""")
+
+  italianPostsDF.na.
+      replace(Array("id", "acceptedAnswerId"), Map(1177 -> 3000)).show(10)
+
+
+  val italianPostsRDDFromDF = italianPostsDF.rdd
+  italianPostsRDDFromDF.take(1).foreach(row => println(row.getLong(11)))
+
 }
