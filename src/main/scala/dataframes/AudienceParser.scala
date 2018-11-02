@@ -10,7 +10,7 @@ object AudienceParser {
 
     import utils.StringUtils._
     def parseAudiencePoi(record: Array[String], date: LocalDate, lastoffertypechangeDate: LocalDate) = {
-        AudiencePoi(id = UUID.randomUUID().toString,
+        AudiencePoi(
             pyear = date.getYear.toString,
             pmonth = date.getMonthValue.toString,
             pday = date.getDayOfMonth.toString,

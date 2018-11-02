@@ -1,11 +1,9 @@
 package dataframes
 
-import java.util.UUID
-
 /**
   * Created by amoussi on 17/10/18.
   */
-case class  AudiencePoi(id: String,
+case class  AudiencePoi(
                         pyear: String,
                         pmonth: String,
                         pday: String,
@@ -58,3 +56,4 @@ case class  AudiencePoi(id: String,
                         indoorview: String,
                         outdoorview: String,
                         tabsappid: String)
+
