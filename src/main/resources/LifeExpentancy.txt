@@ -9,7 +9,7 @@ Australia;81.907000;EAP
 Austria;80.854000;EuCA
 Azerbaijan;70.739000;EuCA
 Bahamas;75.620000;Amer
-Bahrain $75.057000;MENA
+Bahrain;75.057000;MENA
 Bangladesh;68.944000;SAs
 Barbados;76.835000;Amer
 Belarus;70.349000;EuCA

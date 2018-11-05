@@ -18,6 +18,7 @@ object StatisticalDataExplorationFiveNumberSummary {
     def main(args: Array[String]): Unit = {
         val sparkSession = SparkSession.builder().master("local[*]") getOrCreate()
         import StatSourceLoader._
+        import sparkSession.implicits._
         val lifeExpectancyDS = getLifeExpectancyDataSet(sparkSession)
 
         // Describe show the Summary five number of the column lifeExp
@@ -25,5 +26,11 @@ object StatisticalDataExplorationFiveNumberSummary {
 
         val medianAndQuantiles = lifeExpectancyDS.stat.approxQuantile("lifeExp", Array(0.25,0.5,0.75), 0.0)
         medianAndQuantiles.foreach(println)
+
+        val (a, b) = lifeExpectancyDS.select("lifeExp").map(value => {
+            value.getDouble(0)
+        }).rdd.histogram(5)
+        println("------------"+a)
+        println("------------"+b)
     }
 }
