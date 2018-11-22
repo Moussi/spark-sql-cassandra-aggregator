@@ -58,8 +58,8 @@ object StatisticalDataExplorationFiveNumberSummary {
         val zippedValues = startValues.zip(counts)
         case class HistRow(startPoint: Double, count: Long)
         val rowRDD = zippedValues.map(zippedValue => HistRow(zippedValue._1, zippedValue._2))
-        val histDF = sparkSession.createDataFrame(rowRDD)
-        histDF.createOrReplaceTempView("life_expectancy")
+//        val histDF = sparkSession.createDataFrame(rowRDD.toSeq)
+//        histDF.createOrReplaceTempView("life_expectancy")
 
         // we can use zepplein de visualise histogram
     }

@@ -1,6 +1,5 @@
 package dataframes
 
-import dataframes.DFSqlCalculations.ss
 import org.apache.spark.sql.SparkSession
 
 /**
@@ -8,7 +7,7 @@ import org.apache.spark.sql.SparkSession
   */
 object JoinFunctionsMain extends App {
 
-    val ss = SparkSession.builder().master("local[*]").appName("JoinFunctions").getOrCreate()
+    val ss = SparkSession.builder().master("local[*]").appName("JoinFunctions").enableHiveSupport().getOrCreate()
     import ss.implicits._
     import utils.StringUtils._
     val italianVotes = ss.sparkContext.textFile("src/main/resources/italianVotes.csv").map(_.split("~"))
@@ -35,7 +34,8 @@ object JoinFunctionsMain extends App {
         post(12).toLong
     )).toDF
 
-    val postVotes = italianPostsDF.join(italianVotesDf, italianPostsDF("id") === 'postId, "outer").show
+    val postVotes = italianPostsDF.join(italianVotesDf, italianPostsDF("id") === 'postId, "outer")
+    postVotes.write.format("parquet").saveAsTable("postVotes")
 //        .where(italianPostsDF("id").isNotNull)
 //        .where(italianVotesDf("postId").isNull).show
 
