@@ -21,7 +21,7 @@ object StatisticalDataExplorationFiveNumberSummary {
         import sparkSession.implicits._
         val lifeExpectancyDS = getLifeExpectancyDataSet(sparkSession)
 
-        // Describe show the Summary five number of the column lifeExp
+        // Describe show the Summary five number of the column lifeExp (count, mean, stddev, min, or max—is)
         lifeExpectancyDS.describe("lifeExp").show()
 
         val medianAndQuantiles = lifeExpectancyDS.stat.approxQuantile("lifeExp", Array(0.25,0.5,0.75), 0.0)
